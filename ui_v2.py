@@ -155,6 +155,9 @@ hr { border-color:var(--line) !important; }
 @media(max-width:900px){.stockdash-market{grid-template-columns:repeat(2,1fr)}.stockdash-search{min-width:0;width:220px}}
 @media(max-width:640px){.stockdash-topbar{align-items:flex-start;flex-direction:column}.stockdash-search{width:100%}.stockdash-market{grid-template-columns:1fr 1fr}.stockdash-watch-row{grid-template-columns:1.5fr 1fr 1fr}.stockdash-watch-row>:nth-child(3){display:none}}
 
+
+.stockdash-footer{margin-top:22px;padding:14px 4px;color:#94A3B8;font-size:10px;text-align:center}
+
 </style>
 """,
         unsafe_allow_html=True,
