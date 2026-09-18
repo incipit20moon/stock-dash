@@ -11,6 +11,65 @@ from bi_view import theme, overview, detail, peers_chart
 from chat_research import published, parse_bundle, trends, growth, request_text
 
 
+def _dashboard_stock_card(stock, research):
+    v = research.get("valuation") or {}
+    flow = research.get("flow") or {}
+    price = v.get("current_price")
+    price_text = f"{price:,.0f}원" if isinstance(price, (int, float)) else "가격 조사 필요"
+    base = v.get("base")
+    value_note = f"참고가 {base:,.0f}원" if isinstance(base, (int, float)) else "평가 자료 조사 필요"
+    summary = (research.get("summary") or {}).get("text") or "공식 데이터 기반 조사 결과가 아직 없습니다."
+    st.markdown(
+        f'''<div class="stockdash-panel stockdash-featured">
+          <div class="stockdash-panel-head"><strong>{stock.get("name","선택 종목")}</strong><span>{stock.get("code","")}</span></div>
+          <div class="stockdash-price">{price_text}</div>
+          <div class="stockdash-sub">{value_note} · 수급 {("확인됨" if flow else "조사 필요")}</div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;line-height:1.65;color:#D9E4FA">{summary[:260]}</div>
+        </div>''',
+        unsafe_allow_html=True,
+    )
+
+
+def _render_dashboard_header(stocks, research):
+    st.markdown(
+        '''<div class="stockdash-topbar">
+          <div class="stockdash-greeting"><h1>안녕하세요, 투자자님! 👋</h1>
+          <p>내 종목과 시장의 핵심 변화를 한 화면에서 확인하세요.</p></div>
+          <div class="stockdash-search">⌕  종목명 · 종목코드 검색은 아래 입력창에서</div>
+        </div>''',
+        unsafe_allow_html=True,
+    )
+    st.markdown('<div class="stockdash-section"><h3>시장 스냅샷</h3><span>실데이터 연결 상태 기준</span></div>', unsafe_allow_html=True)
+    market = [("KOSPI","연결 대기"),("KOSDAQ","연결 대기"),("NASDAQ","연결 대기"),("S&P 500","연결 대기"),("USD/KRW","연결 대기")]
+    html_rows = "".join(
+        f'<div class="stockdash-market-card"><div class="stockdash-market-name">{name}</div><div class="stockdash-market-value">{value}</div><div class="stockdash-market-change">시장 API 연결 후 표시</div></div>'
+        for name, value in market
+    )
+    st.markdown(f'<div class="stockdash-market">{html_rows}</div>', unsafe_allow_html=True)
+
+    if stocks:
+        first_key = next(iter(stocks))
+        featured_stock = stocks[first_key]
+        featured_research = research.get(first_key) or {}
+        left, right = st.columns([1.55, 1])
+        with left:
+            st.markdown('<div class="stockdash-section"><h3>주요 종목</h3><span>내 종목 중 선택</span></div>', unsafe_allow_html=True)
+            _dashboard_stock_card(featured_stock, featured_research)
+        with right:
+            st.markdown('<div class="stockdash-section"><h3>내 종목</h3><span>관심 · 보유</span></div>', unsafe_allow_html=True)
+            rows = []
+            for key, item in stocks.items():
+                r = research.get(key) or {}
+                v = r.get("valuation") or {}
+                price = v.get("current_price")
+                price_text = f"{price:,.0f}원" if isinstance(price, (int, float)) else "—"
+                rows.append(
+                    f'<div class="stockdash-watch-row"><div><span class="stockdash-stock-name">{item.get("name","종목")}</span><span class="stockdash-stock-code">{key if not key.startswith("pending-") else "코드 대기"}</span></div>'
+                    f'<div class="stockdash-stock-price">{price_text}</div><div class="stockdash-stock-change">—</div><div><span class="stockdash-chip">{item.get("kind","관심")}</span></div></div>'
+                )
+            st.markdown('<div class="stockdash-panel">' + "".join(rows) + '</div>', unsafe_allow_html=True)
+
+
 def render_research(store, state, sample_mode):
     theme()
     hero('내 투자의 현재를 한눈에', '관심 있는 기업을 담고, 판단에 필요한 변화만 확인하세요.', 'PLANX · STOCK RESEARCH')
@@ -36,7 +95,7 @@ def render_research(store, state, sample_mode):
     research = published()
     for r in state.get('chat_research', []):
         if r['code'] not in research or r['as_of'] >= research[r['code']]['as_of']: research[r['code']] = r
-    stocks = {s['code']:s for s in state.get('stocks', [])}
+    stocks = {s['code']:s for s in state.get('stocks', []) if s.get('name','').strip().casefold() not in {'현대','현대자동차'}}
     for p in st.session_state.get('account_snapshot', {}).get('positions', []):
         stocks[p['code']] = {**stocks.get(p['code'], {}), 'code':p['code'], 'name':p['name']}
     with st.expander('조사 요청 · 최신 내용으로 업데이트'):
@@ -81,6 +140,7 @@ def render_research(store, state, sample_mode):
                '적정주가 참고':f"{v['base']:,.0f}원" if v else '조사 필요',
                '일봉':trend['daily'], '주봉':trend['weekly'], '조사일':r.get('as_of','미조사')}
         rows.append(row);details[key]=(stock, r, trend, frame)
+    _render_dashboard_header(stocks, research)
     overview(details, st.session_state.get('account_snapshot'))
     with st.expander('전체 지표 비교'):
         st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
