@@ -372,6 +372,33 @@ def render_home():
 
     global_search()
 
+    # Keep the original "종목 추가" workflow on the new home screen.
+    if not sample_mode:
+        with st.expander("＋ 종목 추가", expanded=not state.get("stocks")):
+            with st.form("dashboard_add_stock"):
+                name_col, code_col, add_col = st.columns([4, 2, 1.2])
+                with name_col:
+                    name = st.text_input("종목명", placeholder="예: 삼성전자", label_visibility="collapsed")
+                with code_col:
+                    code = st.text_input("종목코드", placeholder="선택 · 6자리", max_chars=6, label_visibility="collapsed")
+                with add_col:
+                    submitted = st.form_submit_button("추가", type="primary", use_container_width=True)
+                if submitted:
+                    name, code = name.strip(), code.strip()
+                    if not name or (code and (len(code) != 6 or not code.isascii() or not code.isdigit())):
+                        st.error("종목명을 입력하고, 코드는 생략하거나 숫자 6자리로 입력하세요.")
+                    elif name.casefold() in {x.casefold() for x in REMOVE_FROM_MY_STOCKS}:
+                        st.error("현재 대시보드에서 제외하도록 설정된 종목입니다.")
+                    else:
+                        existing = next((s for s in state.get("stocks", []) if s.get("name", "").strip().casefold() == name.casefold()), {})
+                        identity = existing.get("code") or code or "pending-" + hashlib.sha256(name.casefold().encode()).hexdigest()[:16]
+                        try:
+                            store.save_stock({"code": identity, "name": name, "kind": existing.get("kind", "관심")})
+                            st.session_state.selected_code = identity
+                            st.rerun()
+                        except Exception:
+                            st.error("종목 저장에 실패했습니다. 저장 공간 설정을 확인하세요.")
+
     st.markdown(
         '<div class="stockdash-section"><h3>시장 스냅샷</h3><span>실데이터 연결 상태</span></div>',
         unsafe_allow_html=True,
@@ -851,7 +878,10 @@ def render_placeholder(title, subtitle, required):
 
 
 if nav == "내 종목":
-    render_research(store, state, sample_mode)
+    # New image-inspired dashboard is now the real first screen.
+    # Existing search/analysis flows remain available from the dashboard
+    # and the detailed "종목 분석" page under 설정.
+    render_home()
 elif nav == "계좌 연결":
     render_portfolio(store, sample_mode)
 elif nav == "교육자료":
