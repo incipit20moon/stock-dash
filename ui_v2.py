@@ -222,3 +222,76 @@ def source_badge(label: str, state: str = "wait"):
         f'<span class="planx-source {cls}">{html.escape(label)}</span>',
         unsafe_allow_html=True,
     )
+
+<style>
+
+/* Premium StockDash refresh */
+.stockdash-topbar{
+  position:relative; overflow:hidden; display:flex; align-items:flex-end; justify-content:space-between;
+  gap:24px; padding:30px 32px; margin:0 0 22px; border-radius:24px;
+  background:linear-gradient(120deg,#07142f 0%,#102657 58%,#1d4ed8 100%);
+  box-shadow:0 18px 45px rgba(15,23,42,.14);
+}
+.stockdash-topbar:after{
+  content:""; position:absolute; width:300px; height:300px; right:-90px; top:-170px;
+  border:1px solid rgba(255,255,255,.16); border-radius:50%;
+  box-shadow:0 0 0 32px rgba(255,255,255,.035),0 0 0 64px rgba(255,255,255,.025);
+}
+.stockdash-greeting{position:relative;z-index:1}
+.stockdash-greeting .eyebrow{display:inline-flex;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.1);color:#BFD4FF;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:10px}
+.stockdash-greeting h1{margin:0;color:#fff;font-size:31px;font-weight:850;letter-spacing:-.045em}
+.stockdash-greeting p{margin:7px 0 0;color:#C7D5F2;font-size:13px}
+.stockdash-search{
+  position:relative;z-index:2; min-width:290px; padding:12px 15px; border-radius:13px;
+  color:#AFC0E4; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(12px); font-size:12px;
+}
+.stockdash-section{display:flex;align-items:flex-end;justify-content:space-between;margin:24px 0 11px}
+.stockdash-section h3{margin:0;font-size:18px;font-weight:820;letter-spacing:-.035em}
+.stockdash-section span{font-size:11px;color:#94A3B8}
+.stockdash-market{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:5px}
+.stockdash-market-card{
+  position:relative; overflow:hidden; min-height:105px; background:#fff; border:1px solid #E4EAF2;
+  border-radius:16px; padding:15px 16px; box-shadow:0 8px 24px rgba(15,23,42,.035);
+}
+.stockdash-market-card:after{content:"";position:absolute;width:72px;height:72px;right:-32px;bottom:-32px;border-radius:50%;background:#F1F5FF}
+.stockdash-market-name{font-size:11px;color:#64748B;font-weight:750}
+.stockdash-market-value{font-size:20px;font-weight:850;margin-top:8px;letter-spacing:-.035em}
+.stockdash-market-change{font-size:10px;margin-top:4px;color:#94A3B8;position:relative;z-index:1}
+.stockdash-panel{background:#fff;border:1px solid #E4EAF2;border-radius:18px;padding:19px;box-shadow:0 9px 28px rgba(15,23,42,.04)}
+.stockdash-featured{
+  position:relative;overflow:hidden;background:linear-gradient(135deg,#081631 0%,#122b63 65%,#1d4ed8 100%);
+  color:#fff;border:0;box-shadow:0 16px 34px rgba(15,42,95,.18)
+}
+.stockdash-featured:after{content:"";position:absolute;width:190px;height:190px;right:-75px;top:-95px;border-radius:50%;border:1px solid rgba(255,255,255,.12);box-shadow:0 0 0 24px rgba(255,255,255,.025)}
+.stockdash-featured .stockdash-panel-head,.stockdash-featured .stockdash-price,.stockdash-featured .stockdash-sub{position:relative;z-index:1}
+.stockdash-featured .stockdash-panel-head span{color:#B8C8E8}
+.stockdash-featured .stockdash-price{font-size:34px;font-weight:880;letter-spacing:-.05em}
+.stockdash-featured .stockdash-sub{font-size:11px;color:#B8C8E8}
+.stockdash-featured + div [data-testid="stMetric"]{box-shadow:none}
+.stockdash-chip{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800;background:#EEF4FF;color:#2563EB}
+.stockdash-watch-row{
+  display:grid;grid-template-columns:1.8fr 1fr 1fr auto;align-items:center;gap:10px;
+  padding:13px 2px;border-bottom:1px solid #EEF2F7
+}
+.stockdash-watch-row:last-child{border-bottom:0}
+.stockdash-stock-name{font-weight:780;font-size:13px}.stockdash-stock-code{font-size:10px;color:#94A3B8;margin-left:7px}
+.stockdash-stock-price{text-align:right;font-weight:780;font-size:13px}.stockdash-stock-change{text-align:right;font-size:11px;color:#64748B}
+.stockdash-ai{
+  background:linear-gradient(135deg,#F0F5FF 0%,#FAFBFF 100%);border:1px solid #DDE8FF;border-radius:16px;padding:18px
+}
+.stockdash-ai-title{color:#2563EB;font-size:10px;font-weight:850;letter-spacing:.1em;margin-bottom:7px}
+.stockdash-ai-text{font-size:13px;line-height:1.65;color:#334155}
+.stockdash-footer{margin-top:28px;padding:16px 4px;color:#94A3B8;font-size:10px;text-align:center}
+@media(max-width:900px){
+ .stockdash-market{grid-template-columns:repeat(2,1fr)} .stockdash-search{min-width:0;width:230px}
+ .stockdash-topbar{padding:24px 22px}
+}
+@media(max-width:640px){
+ .stockdash-topbar{align-items:flex-start;flex-direction:column;padding:22px 19px}
+ .stockdash-search{width:100%}.stockdash-market{grid-template-columns:1fr 1fr}
+ .stockdash-watch-row{grid-template-columns:1.5fr 1fr auto}.stockdash-watch-row>:nth-child(3){display:none}
+ .stockdash-greeting h1{font-size:26px}
+}
+
+</style>
