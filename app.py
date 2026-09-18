@@ -131,6 +131,41 @@ except Exception:
     st.stop()
 
 
+REMOVE_FROM_MY_STOCKS = {"현대", "현대자동차"}
+
+
+def remove_requested_stocks(store, state):
+    """Remove explicitly requested names from the persistent '내 종목' list."""
+    unwanted = {name.casefold() for name in REMOVE_FROM_MY_STOCKS}
+    removed_codes = {
+        item.get("code")
+        for item in state.get("stocks", [])
+        if item.get("name", "").strip().casefold() in unwanted
+    }
+    if not removed_codes:
+        return
+
+    def cleanup(data):
+        data["stocks"] = [
+            item for item in data.get("stocks", [])
+            if item.get("name", "").strip().casefold() not in unwanted
+        ]
+
+    store.change(cleanup)
+    state["stocks"] = [
+        item for item in state.get("stocks", [])
+        if item.get("name", "").strip().casefold() not in unwanted
+    ]
+    if st.session_state.get("selected_code") in removed_codes:
+        st.session_state.pop("selected_code", None)
+    latest = st.session_state.get("latest_analysis")
+    if latest and latest.get("code") in removed_codes:
+        st.session_state.pop("latest_analysis", None)
+
+
+remove_requested_stocks(store, state)
+
+
 def run_analysis(code):
     try:
         with st.spinner("공식 시세 · 결산 · 가치 · 사업 공시를 확인합니다…"):
