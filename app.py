@@ -1,4 +1,5 @@
 import hashlib
+import html
 import hmac
 import json
 import os
@@ -355,76 +356,173 @@ def global_search():
                     run_analysis(candidate["code"])
 
 
+
 def render_home():
-    hero(
-        "시장을 읽고, 더 나은 판단을 만듭니다.",
-        "공시·재무·시세를 한 흐름으로 연결하고, 새 기관 API가 추가될수록 시장·수급·산업 분석이 확장됩니다.",
+    """Image-inspired investment dashboard home."""
+    st.markdown(
+        f'''<div class="stockdash-topbar">
+          <div class="stockdash-greeting">
+            <h1>안녕하세요, 투자자님! 👋</h1>
+            <p>오늘의 시장 흐름과 내 종목의 핵심 변화를 한 화면에서 확인하세요.</p>
+          </div>
+          <div class="stockdash-search">⌕  종목명 · 종목코드로 빠르게 검색</div>
+        </div>''',
+        unsafe_allow_html=True,
     )
+
     global_search()
 
-    st.subheader("시장 스냅샷")
-    cols = st.columns(4)
-    market_cards = [
-        ("KOSPI", "데이터 연결 필요", "market.index"),
-        ("KOSDAQ", "데이터 연결 필요", "market.index"),
-        ("외국인 수급", "데이터 연결 필요", "market.investor_flow"),
-        ("원/달러", "데이터 연결 필요", "macro.fx"),
+    st.markdown(
+        '<div class="stockdash-section"><h3>시장 스냅샷</h3><span>실데이터 연결 상태</span></div>',
+        unsafe_allow_html=True,
+    )
+    caps = active_capabilities()
+    market_items = [
+        ("KOSPI", "market.index"),
+        ("KOSDAQ", "market.index"),
+        ("외국인 수급", "market.investor_flow"),
+        ("원/달러", "macro.fx"),
+        ("거래대금", "market.turnover"),
     ]
-    for col, (title, value, cap) in zip(cols, market_cards):
-        with col:
-            card(title, value, f"필요 Capability · {cap}")
+    market_html = []
+    for title, cap in market_items:
+        if cap in caps:
+            value, note = "연결됨", cap
+        else:
+            value, note = "연결 대기", f"필요 · {cap}"
+        market_html.append(
+            f'''<div class="stockdash-market-card">
+                <div class="stockdash-market-name">{html.escape(title)}</div>
+                <div class="stockdash-market-value">{html.escape(value)}</div>
+                <div class="stockdash-market-change">{html.escape(note)}</div>
+            </div>'''
+        )
+    st.markdown('<div class="stockdash-market">' + "".join(market_html) + '</div>', unsafe_allow_html=True)
 
-    left, right = st.columns([2, 1])
-    with left:
-        with st.container(border=True):
-            st.subheader("주요 지수 추이")
-            empty_state(
-                "시장 시계열 API 연결 대기",
-                "지수 API가 연결되면 KOSPI·KOSDAQ과 주요 시장 흐름을 이 영역에 표시합니다. 가상 지수는 넣지 않습니다.",
+    saved = [
+        s for s in state.get("stocks", [])
+        if s.get("name", "").strip().casefold() not in REMOVE_FROM_MY_STOCKS
+    ]
+    if saved:
+        st.markdown(
+            '<div class="stockdash-section"><h3>내 투자 포커스</h3><span>저장된 종목 기준</span></div>',
+            unsafe_allow_html=True,
+        )
+        left, right = st.columns([1.55, 1], gap="large")
+
+        with left:
+            selected_stock = stock if stock.get("code") != "SAMPLE" else saved[0]
+            selected_report = selected_stock.get("report")
+            price = selected_report.get("price") if isinstance(selected_report, dict) else None
+            price_text = f"{price:,.0f}원" if isinstance(price, (int, float)) else "분석 데이터 대기"
+            st.markdown(
+                f'''<div class="stockdash-panel stockdash-featured">
+                  <div class="stockdash-panel-head">
+                    <strong>{html.escape(selected_stock.get("name", "내 종목"))}</strong>
+                    <span>{html.escape(selected_stock.get("code", ""))}</span>
+                  </div>
+                  <div class="stockdash-price">{html.escape(price_text)}</div>
+                  <div class="stockdash-sub">공식 데이터 기반 · 최신 분석 결과</div>
+                </div>''',
+                unsafe_allow_html=True,
             )
+            if selected_report:
+                result = brief(selected_report)
+                fair = result.get("fair")
+                metric_cols = st.columns(4)
+                metric_cols[0].metric("기준 종가", f"{selected_report['price']:,.0f}원")
+                metric_cols[1].metric("성장", result.get("growth", "자료 부족"))
+                metric_cols[2].metric("가치 상태", result.get("value", "자료 부족"))
+                metric_cols[3].metric("적정가 참고", f"{fair['base']:,.0f}원" if fair else "자료 부족")
+            else:
+                st.caption("최신 공식 분석을 실행하면 기업·재무·공시 정보가 이 카드에 채워집니다.")
+            if st.button("선택 종목 상세 분석", type="primary", use_container_width=True):
+                st.session_state.selected_code = selected_stock.get("code")
+                st.session_state.force_nav = "종목 분석"
+                st.rerun()
+
+        with right:
+            st.markdown(
+                '<div class="stockdash-section" style="margin-top:0"><h3>내 종목</h3><span>관심 · 보유</span></div>',
+                unsafe_allow_html=True,
+            )
+            rows = []
+            for item in saved[:8]:
+                name = html.escape(item.get("name", "종목"))
+                code = html.escape(item.get("code", ""))
+                kind = html.escape(item.get("kind", "관심"))
+                rep = item.get("report") or {}
+                item_price = rep.get("price")
+                item_price_text = f"{item_price:,.0f}원" if isinstance(item_price, (int, float)) else "—"
+                rows.append(
+                    f'''<div class="stockdash-watch-row">
+                      <div><span class="stockdash-stock-name">{name}</span><span class="stockdash-stock-code">{code}</span></div>
+                      <div class="stockdash-stock-price">{item_price_text}</div>
+                      <div class="stockdash-stock-change">{html.escape("분석 완료" if rep else "분석 필요")}</div>
+                      <div><span class="stockdash-chip">{kind}</span></div>
+                    </div>'''
+                )
+            st.markdown('<div class="stockdash-panel">' + "".join(rows) + '</div>', unsafe_allow_html=True)
+    else:
+        st.markdown(
+            '''<div class="stockdash-panel stockdash-ai">
+              <div class="stockdash-ai-title">START YOUR PORTFOLIO</div>
+              <div class="stockdash-ai-text"><strong>첫 종목을 추가해보세요.</strong><br>
+              삼성전자를 비롯한 관심 종목을 추가하면 이 화면이 나만의 투자 대시보드로 채워집니다.</div>
+            </div>''',
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        '<div class="stockdash-section"><h3>오늘의 주요 변화</h3><span>공식 공시 · 분석 결과</span></div>',
+        unsafe_allow_html=True,
+    )
+    left, right = st.columns([1.35, 1], gap="large")
+    with left:
+        notices = []
+        if report and not is_demo:
+            notices = sorted(report.get("disclosures", []), key=lambda x: x.get("date", ""), reverse=True)
+        with st.container(border=True):
+            if notices:
+                for item in notices[:5]:
+                    st.link_button(
+                        item.get("date", "") + " · " + item.get("title", ""),
+                        item.get("url", "#"),
+                        use_container_width=True,
+                    )
+            else:
+                st.markdown(
+                    '<div class="stockdash-ai"><div class="stockdash-ai-title">DATA-DRIVEN</div>'
+                    '<div class="stockdash-ai-text">선택 종목을 분석하면 최근 공시와 핵심 변화가 이 영역에 표시됩니다.</div></div>',
+                    unsafe_allow_html=True,
+                )
+
     with right:
         with st.container(border=True):
-            st.subheader("오늘의 주요 변화")
-            if report and not is_demo:
-                notices = sorted(report.get("disclosures", []), key=lambda x: x.get("date", ""), reverse=True)
-                if notices:
-                    for item in notices[:4]:
-                        st.link_button(item["date"] + " · " + item["title"], item["url"], use_container_width=True)
-                else:
-                    st.caption("선택 종목의 최근 공시가 수집되지 않았습니다.")
-            else:
-                empty_state("종목을 검색해 시작", "검색 후 선택 종목의 최신 공시와 핵심 변화를 여기에 모읍니다.")
+            st.subheader("빠른 이동")
+            q1, q2 = st.columns(2)
+            with q1:
+                if st.button("📈 종목 분석", use_container_width=True):
+                    st.session_state.force_nav = "종목 분석"
+                    st.rerun()
+                if st.button("☆ 관심 종목", use_container_width=True):
+                    st.session_state.force_nav = "내 종목"
+                    st.rerun()
+            with q2:
+                if st.button("▥ 시장 현황", use_container_width=True):
+                    st.session_state.force_nav = "설정"
+                    st.session_state.advanced_page = "시장 현황"
+                    st.rerun()
+                if st.button("⚙ 데이터 연결", use_container_width=True):
+                    st.session_state.force_nav = "설정"
+                    st.session_state.advanced_page = "데이터 연결 관리"
+                    st.rerun()
 
-    st.subheader("내 분석 포커스")
-    if report:
-        result = brief(report)
-        fair = result.get("fair")
-        cols = st.columns(4)
-        with cols[0]:
-            card("현재 선택", stock["name"], stock_label(stock))
-        with cols[1]:
-            card("성장", result["growth"], "확정 결산 기반")
-        with cols[2]:
-            card("가치 상태", result["value"], "역사적 배수 참고")
-        with cols[3]:
-            value = f"{fair['base']:,.0f}원" if fair else "자료 부족"
-            card("적정가 참고", value, "목표주가가 아닌 참고값")
-    else:
-        empty_state("아직 분석된 종목이 없습니다", "상단 검색에서 종목을 선택하면 기업·재무·공시 분석이 저장됩니다.")
-
-    st.subheader("확장 준비")
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        card("상승률 TOP", "API 연결 대기", "market ranking")
-    with c2:
-        card("거래대금 TOP", "API 연결 대기", "market turnover")
-    with c3:
-        ai = stock.get("ai_brief", {})
-        if ai.get("status") == "ok":
-            card("AI 인사이트", "분석 준비됨", "수집 데이터 해설")
-        else:
-            card("AI 인사이트", "선택 기능", "OPENAI API 연결 시 활성화")
-
+    st.markdown(
+        '<div class="stockdash-footer">StockDash · 공식 데이터와 공시를 중심으로 확인하는 투자 리서치 화면입니다. '
+        '표시되지 않은 값은 임의로 생성하지 않습니다.</div>',
+        unsafe_allow_html=True,
+    )
 
 def render_market():
     hero("시장 현황", "지수·거래대금·시장 폭·투자자 수급을 한 화면으로 연결하는 영역입니다.", "MARKET")
