@@ -359,102 +359,100 @@ def global_search():
 
 
 def render_home():
-    """Visual preview dashboard. Sample figures are intentionally used for design preview."""
+    """Selected mockup #2: macro signals -> future themes -> deep dive & screener."""
     st.markdown(
         '''<div class="stockdash-topbar">
           <div class="stockdash-greeting"><h1>안녕하세요, 투자자님! 👋</h1>
-          <p>오늘도 성공적인 투자를 응원합니다. <span class="stockdash-chip">DESIGN PREVIEW · 샘플 데이터</span></p></div>
+          <p>지금은 글로벌 시장과 미래 테마를 확인하고, 더 나은 투자 기회를 찾아보세요.</p></div>
           <div class="stockdash-search">⌕  종목명 또는 코드 검색 (예: 삼성전자, 005930)</div>
         </div>''', unsafe_allow_html=True)
 
-    market = [
-        ("코스피","2,726.45","▲ 18.63 (+0.69%)","12.5조원"),
-        ("코스닥","855.12","▲ 7.21 (+0.85%)","8.2조원"),
-        ("나스닥","17,133.13","▼ 123.45 (-0.72%)","5,482억달러"),
-        ("S&P 500","5,307.01","▼ 19.25 (-0.36%)","3,981억달러"),
-        ("원/달러 (USD/KRW)","1,357.80","▼ 4.10 (-0.30%)","전일대비 -4.10"),
-    ]
-    cards = "".join(
-        f'''<div class="stockdash-kpi"><div class="stockdash-kpi-label">{a}</div>
-        <div class="stockdash-kpi-value">{b}</div>
-        <div class="stockdash-kpi-note">{c}<br>{d}</div></div>''' for a,b,c,d in market)
-    st.markdown('<div class="stockdash-kpi-grid">'+cards+'</div>', unsafe_allow_html=True)
-
-    watch = [
-        ("삼성전자","005930","78,600원","+1.55%"),
-        ("SK하이닉스","000660","194,500원","+1.30%"),
-        ("LG에너지솔루션","373220","362,000원","+1.26%"),
-        ("NAVER","035420","203,500원","+0.74%"),
-        ("카카오","035720","49,850원","-4.41%"),
-    ]
-    rows = "".join(
-        f'''<div class="stockdash-watch-row"><div><span class="stockdash-stock-name">{n}</span>
-        <span class="stockdash-stock-code">{code}</span></div><div class="stockdash-stock-price">{p}</div>
-        <div class="stockdash-stock-change">{ch}</div><div><span class="stockdash-chip">관심</span></div></div>'''
-        for n,code,p,ch in watch)
+    st.markdown(
+        '''<section class="future-section">
+        <div class="future-head"><div><h2>📊 거시 시그널 <span style="font-size:12px;color:#4F6FAE">Global Macro Signals</span></h2>
+        <p>글로벌 자금 흐름과 주요 지표를 한눈에 확인하세요.</p></div><span class="future-demo">DEMO DATA</span></div>
+        <div class="macro-grid">
+          <div class="macro-card"><div class="macro-title">빅테크 CapEx 집행률</div><div class="macro-sub">분기 누적 · 전년 대비</div>
+            <div class="macro-value">78% <span style="font-size:13px;color:#16A34A">▲ +12%p</span></div>
+            <div class="bar-stack"><i style="height:32%"></i><i style="height:47%"></i><i style="height:67%"></i><i style="height:82%"></i></div>
+            <div class="macro-sub">Microsoft 94% · Google 87% · Amazon 76% · Meta 68% · Apple 62%</div>
+          </div>
+          <div class="macro-card"><div class="macro-title">섹터별 기관/외국인 자금 유입</div><div class="macro-sub">최근 1주 · 단위 억원</div>
+            <div class="flow-row"><span>반도체</span><div class="flow-bar" style="width:100%"></div><b>+12,840</b></div>
+            <div class="flow-row"><span>IT하드웨어</span><div class="flow-bar" style="width:72%"></div><b>+8,420</b></div>
+            <div class="flow-row"><span>2차전지</span><div class="flow-bar" style="width:58%"></div><b>+6,780</b></div>
+            <div class="flow-row"><span>바이오</span><div class="flow-bar" style="width:36%"></div><b>+3,920</b></div>
+            <div class="flow-row"><span>헬스케어</span><div class="flow-bar" style="width:22%"></div><b>+2,310</b></div>
+          </div>
+          <div class="macro-card"><div class="macro-title">미 연준 금리 트렌드</div><div class="macro-sub">기준금리 · %</div>
+            <div class="macro-value">5.25 ~ 5.50%</div>
+            <svg viewBox="0 0 420 120" width="100%" height="120"><polyline fill="none" stroke="#2563EB" stroke-width="5" points="5,105 35,105 35,92 65,92 65,78 95,78 95,65 125,65 125,51 155,51 155,38 185,38 185,27 215,27 215,19 245,19 245,15 285,15 325,15 365,20 415,20"/></svg>
+            <div class="macro-sub">다음 FOMC · 2025.06.18</div>
+          </div>
+          <div class="macro-card"><div class="macro-title">USD/KRW 환율 트렌드</div><div class="macro-value">1,357.80원</div><div style="color:#2563EB;font-size:12px">▼ -4.10 (-0.30%)</div>
+            <svg viewBox="0 0 420 110" width="100%" height="110"><polyline fill="none" stroke="#FB7185" stroke-width="4" points="0,70 30,62 60,66 90,50 120,58 150,45 180,52 210,34 240,41 270,32 300,45 330,38 360,50 420,46"/></svg>
+            <div class="macro-sub">주요 이슈 · 미국 국채금리 상승 · 달러 강세 지속 · 수출업체 환헤지 물량 증가</div>
+          </div>
+        </div></section>''', unsafe_allow_html=True)
 
     st.markdown(
-        f'''<div class="stockdash-grid-3">
-          <div class="stockdash-hero-card">
-            <div><span class="stockdash-hero-name">삼성전자</span><span class="stockdash-hero-code">005930 ★</span></div>
-            <div class="stockdash-hero-meta"><span class="stockdash-dark-chip">코스피</span><span class="stockdash-dark-chip">전기전자</span><span class="stockdash-dark-chip">시가총액 469조원</span></div>
-            <div class="stockdash-hero-price">78,600원</div><div class="stockdash-hero-change">▲ 1,200 (+1.55%)</div>
-            <div class="stockdash-ohlc">
-              <div><span>전일 종가</span><strong>77,400</strong></div><div><span>시가</span><strong>77,800</strong></div>
-              <div><span>고가</span><strong>78,900</strong></div><div><span>저가</span><strong>77,300</strong></div>
-              <div><span>거래량</span><strong>12,534,281</strong></div>
-            </div>
+        '''<section class="future-section">
+        <div class="future-head"><div><h2>🚀 5대 미래 유망 테마 <span style="font-size:12px;color:#4F6FAE">Future Investment Themes</span></h2>
+        <p>지금 주목해야 할 핵심 테마를 확인하고, 투자 기회를 찾아보세요.</p></div><span class="future-demo">DEMO DATA</span></div>
+        <div class="theme-tabs">
+          <div class="theme-tab active">▣ AI/반도체</div><div class="theme-tab">♙ 로보틱스</div><div class="theme-tab">♻ 차세대 에너지</div><div class="theme-tab">✚ 바이오/헬스</div><div class="theme-tab">🚀 우주/방산</div>
+        </div>
+        <div class="theme-grid">
+          <div class="theme-hero"><div style="font-size:26px;font-weight:900">AI/반도체</div><div style="margin-top:9px;color:#D9E4FA">AI 인프라 확장과 반도체 수요 증가로 지속적인 성장 기대</div>
+            <div style="margin-top:16px"><span class="stockdash-dark-chip">#AI인프라</span> <span class="stockdash-dark-chip">#HBM</span> <span class="stockdash-dark-chip">#데이터센터</span> <span class="stockdash-dark-chip">#온디바이스AI</span></div>
+            <div class="stockdash-ohlc"><div><span>최근 1개월 자금 유입</span><strong>+12,840억원</strong></div><div><span>섹터 수익률</span><strong>+8.4%</strong></div><div><span>평균 PER</span><strong>24.7배</strong></div><div><span>모멘텀 점수</span><strong>87점</strong></div></div>
           </div>
-          <div class="stockdash-small-card">
-            <div class="stockdash-title-row"><strong>삼성전자 주가 차트</strong><span>일 · 주 · 월 · 3개월 · 1년</span></div>
-            <div style="height:235px;position:relative;background:linear-gradient(180deg,#F8FAFF,#fff);border-radius:12px;overflow:hidden">
-              <svg viewBox="0 0 520 235" width="100%" height="100%" preserveAspectRatio="none">
-                <g stroke="#E8EEF7" stroke-width="1"><line x1="0" y1="45" x2="520" y2="45"/><line x1="0" y1="95" x2="520" y2="95"/><line x1="0" y1="145" x2="520" y2="145"/><line x1="0" y1="195" x2="520" y2="195"/></g>
-                <polyline fill="none" stroke="#2563EB" stroke-width="4" points="8,150 35,168 62,130 90,182 118,155 145,112 172,126 200,92 228,104 255,78 282,91 310,67 338,99 365,82 392,58 420,75 448,42 476,54 510,24"/>
-              </svg>
-              <div style="position:absolute;left:14px;bottom:12px;color:#94A3B8;font-size:10px">05/01　05/08　05/15　05/22　05/29　06/01</div>
-            </div>
+          <div class="theme-mini"><div class="deep-title">로보틱스</div><div class="macro-sub">산업 자동화 확산과 로봇 시장 성장</div><div class="metric">자금 유입 <b>+6,230억</b></div><div class="metric">수익률 <b>+6.8%</b></div><div class="metric">모멘텀 <b>78점</b></div></div>
+          <div class="theme-mini"><div class="deep-title">차세대 에너지</div><div class="macro-sub">친환경 에너지 전환과 전기차 확산</div><div class="metric">자금 유입 <b>+4,870억</b></div><div class="metric">수익률 <b>+5.9%</b></div><div class="metric">모멘텀 <b>72점</b></div></div>
+          <div class="theme-mini"><div class="deep-title">바이오/헬스</div><div class="macro-sub">신약 개발과 바이오 기술 혁신</div><div class="metric">자금 유입 <b>+3,120억</b></div><div class="metric">수익률 <b>+4.7%</b></div><div class="metric">모멘텀 <b>68점</b></div></div>
+          <div class="theme-mini"><div class="deep-title">우주/방산</div><div class="macro-sub">우주 산업 성장과 글로벌 방산 수요 증가</div><div class="metric">자금 유입 <b>+2,860억</b></div><div class="metric">수익률 <b>+4.1%</b></div><div class="metric">모멘텀 <b>63점</b></div></div>
+        </div></section>''', unsafe_allow_html=True)
+
+    st.markdown(
+        '''<section class="future-section">
+        <div class="future-head"><div><h2>🔎 테마 내 종목 딥다이브 & 스크리너 <span style="font-size:12px;color:#4F6FAE">Stock Deep Dive & Screener</span></h2>
+        <p>관심 테마의 핵심 종목을 심층 분석하고, 나만의 스크리너로 찾아보세요.</p></div><span class="future-demo">DEMO DATA</span></div>
+        <div class="deep-grid">
+          <div class="deep-card"><div class="deep-title">AI/반도체 테마 Top-Pick</div>
+            <div class="pick-row"><b>1</b><b>NVIDIA</b><span>1,035.40</span><span>+12.8%</span></div>
+            <div class="pick-row"><b>2</b><b>삼성전자</b><span>78,600</span><span>+11.2%</span></div>
+            <div class="pick-row"><b>3</b><b>SK하이닉스</b><span>194,500</span><span>+13.5%</span></div>
+            <div class="pick-row"><b>4</b><b>TSMC</b><span>862.50</span><span>+10.4%</span></div>
+            <div class="pick-row"><b>5</b><b>ASML</b><span>745.20</span><span>+7.6%</span></div>
           </div>
-          <div class="stockdash-small-card"><div class="stockdash-title-row"><strong>내 종목</strong><span>전체보기 ›</span></div>{rows}</div>
-        </div>''', unsafe_allow_html=True)
-
-    st.markdown('<div class="stockdash-section"><h3>포트폴리오 현황</h3><span>샘플 데이터로 디자인 확인</span></div>', unsafe_allow_html=True)
-    c1,c2,c3 = st.columns([1,1.25,1], gap="large")
-    with c1:
-        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>내 포트폴리오 현황</strong><span>총 자산</span></div>
-        <div style="font-size:26px;font-weight:900">125,980,000원</div><div style="margin:7px 0 18px;color:#EF4444;font-weight:800">+8,750,000원 (+7.46%)</div>
-        <div style="display:flex;justify-content:space-between;font-size:12px"><span>삼성전자 45.2%</span><b>SK하이닉스 18.6%</b></div>
-        <div style="height:10px;background:linear-gradient(90deg,#2563EB 0 45%,#60A5FA 45% 64%,#22C55E 64% 78%,#F59E0B 78% 89%,#CBD5E1 89%);border-radius:999px;margin-top:12px"></div></div>''', unsafe_allow_html=True)
-    with c2:
-        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>수익률 추이</strong><span>3개월</span></div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px"><div class="stockdash-kpi"><div class="stockdash-kpi-label">총 자산</div><b>125,980,000원</b></div><div class="stockdash-kpi"><div class="stockdash-kpi-label">평가 손익</div><b>+8,750,000원</b></div><div class="stockdash-kpi"><div class="stockdash-kpi-label">수익률</div><b>+7.46%</b></div></div>
-        <svg viewBox="0 0 520 125" width="100%" height="125"><polyline fill="none" stroke="#2563EB" stroke-width="4" points="0,105 35,95 70,101 105,76 140,82 175,57 210,66 245,42 280,54 315,35 350,45 385,24 420,31 455,18 520,25"/></svg></div>''', unsafe_allow_html=True)
-    with c3:
-        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>AI 인사이트 요약</strong><span>더보기 ›</span></div>
-        <div class="stockdash-ai"><div class="stockdash-ai-title">🤖 AI SUMMARY</div><div class="stockdash-ai-text">삼성전자는 메모리 반도체 업황 개선과 AI 수요 증가로 실적 개선이 기대됩니다.<br><br>목표가 상향 리포트가 증가하고 있으며 기관 매수세가 이어지는 흐름입니다.</div>
-        <div style="margin-top:12px"><span class="stockdash-chip">긍정</span> <span class="stockdash-chip">목표가 상향</span> <span class="stockdash-chip">실적 개선</span></div></div></div>''', unsafe_allow_html=True)
-
-    st.markdown('<div class="stockdash-section"><h3>오늘의 주요 정보</h3><span>샘플 프리뷰</span></div>', unsafe_allow_html=True)
-    b1,b2,b3 = st.columns([1,1.25,1], gap="large")
-    with b1:
-        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>오늘의 주요 종목 상승률 TOP 5</strong><span>더보기 ›</span></div>
-        <div class="stockdash-watch-row"><b>1　두산에너빌리티</b><span>35,400원</span><span>+8.24%</span><span>━━</span></div>
-        <div class="stockdash-watch-row"><b>2　한화솔루션</b><span>28,200원</span><span>+6.35%</span><span>━━</span></div>
-        <div class="stockdash-watch-row"><b>3　POSCO홀딩스</b><span>412,000원</span><span>+4.87%</span><span>━━</span></div>
-        <div class="stockdash-watch-row"><b>4　삼성SDI</b><span>385,000원</span><span>+4.23%</span><span>━━</span></div>
-        <div class="stockdash-watch-row"><b>5　한국전력</b><span>23,250원</span><span>+3.91%</span><span>━━</span></div></div>''', unsafe_allow_html=True)
-    with b2:
-        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>주요 뉴스 & 공시</strong><span>더보기 ›</span></div>
-        <div class="stockdash-watch-row"><span class="stockdash-chip">공시</span><b>삼성전자 연결재무제표 기준 영업실적</b><span>08:30</span><span>›</span></div>
-        <div class="stockdash-watch-row"><span class="stockdash-chip">뉴스</span><b>삼성전자, AI 반도체 HBM 본격 양산</b><span>07:45</span><span>›</span></div>
-        <div class="stockdash-watch-row"><span class="stockdash-chip">리포트</span><b>삼성전자 목표가 상향 리포트 증가</b><span>07:20</span><span>›</span></div>
-        <div class="stockdash-watch-row"><span class="stockdash-chip">뉴스</span><b>SK하이닉스, HBM 수요 확대 전망</b><span>06:55</span><span>›</span></div></div>''', unsafe_allow_html=True)
-    with b3:
-        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>빠른 메뉴</strong><span>바로가기</span></div><div class="stockdash-quick-grid">
-        <div class="stockdash-quick">🔎<b>종목 검색</b></div><div class="stockdash-quick">⭐<b>관심 종목</b></div><div class="stockdash-quick">📊<b>시장 현황</b></div>
-        <div class="stockdash-quick">📄<b>종목 분석</b></div><div class="stockdash-quick">💼<b>재무 분석</b></div><div class="stockdash-quick">💡<b>AI 인사이트</b></div></div></div>''', unsafe_allow_html=True)
-
-    st.caption("※ 현재 홈 화면의 지수·가격·수익률·뉴스 문구는 디자인 확인을 위한 샘플 값입니다. 실제 투자 데이터가 아닙니다.")
+          <div class="deep-card"><div class="deep-title">매출 성장률 vs FCF</div>
+            <svg viewBox="0 0 420 220" width="100%" height="215">
+              <line x1="35" y1="185" x2="400" y2="185" stroke="#D8E0EC"/><line x1="35" y1="20" x2="35" y2="185" stroke="#D8E0EC"/>
+              <circle cx="305" cy="52" r="13" fill="#84CC16"/><text x="322" y="57" font-size="12">NVIDIA</text>
+              <circle cx="230" cy="90" r="12" fill="#8B5CF6"/><text x="246" y="94" font-size="12">SK하이닉스</text>
+              <circle cx="330" cy="112" r="12" fill="#2563EB"/><text x="346" y="116" font-size="12">삼성전자</text>
+              <circle cx="180" cy="130" r="10" fill="#EF4444"/><text x="195" y="134" font-size="12">TSMC</text>
+              <circle cx="110" cy="145" r="10" fill="#F59E0B"/><text x="125" y="149" font-size="12">ASML</text>
+              <text x="150" y="210" font-size="11" fill="#64748B">FCF (조원)</text><text x="3" y="100" font-size="11" fill="#64748B" transform="rotate(-90 12 100)">매출 성장률 (%)</text>
+            </svg>
+          </div>
+          <div class="deep-card"><div class="deep-title">R&D 비중 (매출 대비)</div>
+            <div class="rd-row"><span>NVIDIA</span><div class="rd-track"><div class="rd-fill" style="width:90%"></div></div><b>27.1%</b></div>
+            <div class="rd-row"><span>AMD</span><div class="rd-track"><div class="rd-fill" style="width:86%"></div></div><b>26.4%</b></div>
+            <div class="rd-row"><span>Intel</span><div class="rd-track"><div class="rd-fill" style="width:72%"></div></div><b>21.9%</b></div>
+            <div class="rd-row"><span>삼성전자</span><div class="rd-track"><div class="rd-fill" style="width:39%"></div></div><b>11.8%</b></div>
+            <div class="rd-row"><span>SK하이닉스</span><div class="rd-track"><div class="rd-fill" style="width:35%"></div></div><b>10.4%</b></div>
+          </div>
+          <div class="deep-card"><div class="deep-title">주요 일정 & 모멘텀 타임라인</div>
+            <div class="timeline-row"><b>06.03</b><i class="timeline-dot"></i><span>NVIDIA 실적 발표</span></div>
+            <div class="timeline-row"><b>06.05</b><i class="timeline-dot"></i><span>SK하이닉스 HBM3E 신규 수주</span></div>
+            <div class="timeline-row"><b>06.12</b><i class="timeline-dot"></i><span>삼성전자 AI 신사업 로드맵 공개</span></div>
+            <div class="timeline-row"><b>06.18</b><i class="timeline-dot"></i><span>연준 FOMC 금리 발표</span></div>
+            <div class="timeline-row"><b>06.25</b><i class="timeline-dot"></i><span>TSMC 월간 매출 발표</span></div>
+            <div class="timeline-row"><b>07.02</b><i class="timeline-dot"></i><span>ASML 신규 장비 수주 발표</span></div>
+          </div>
+        </div></section>
+        <div class="stockdash-footer">※ 본 화면은 디자인 확인용 샘플 데이터입니다. 실제 투자 판단 자료가 아닙니다.</div>''', unsafe_allow_html=True)
 
 def render_market():
     hero("시장 현황", "지수·거래대금·시장 폭·투자자 수급을 한 화면으로 연결하는 영역입니다.", "MARKET")
