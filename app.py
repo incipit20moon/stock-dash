@@ -359,100 +359,118 @@ def global_search():
 
 
 def render_home():
-    """Selected mockup #2: macro signals -> future themes -> deep dive & screener."""
+    """Compact final dashboard mockup with all requested indicators."""
     st.markdown(
         '''<div class="stockdash-topbar">
           <div class="stockdash-greeting"><h1>안녕하세요, 투자자님! 👋</h1>
-          <p>지금은 글로벌 시장과 미래 테마를 확인하고, 더 나은 투자 기회를 찾아보세요.</p></div>
+          <p>글로벌 시장 흐름과 산업 데이터를 한눈에 확인하고, 더 나은 투자 기회를 찾아보세요.</p></div>
           <div class="stockdash-search">⌕  종목명 또는 코드 검색 (예: 삼성전자, 005930)</div>
         </div>''', unsafe_allow_html=True)
 
     st.markdown(
-        '''<section class="future-section">
-        <div class="future-head"><div><h2>📊 거시 시그널 <span style="font-size:12px;color:#4F6FAE">Global Macro Signals</span></h2>
-        <p>글로벌 자금 흐름과 주요 지표를 한눈에 확인하세요.</p></div><span class="future-demo">DEMO DATA</span></div>
-        <div class="macro-grid">
-          <div class="macro-card"><div class="macro-title">빅테크 CapEx 집행률</div><div class="macro-sub">분기 누적 · 전년 대비</div>
-            <div class="macro-value">78% <span style="font-size:13px;color:#16A34A">▲ +12%p</span></div>
-            <div class="bar-stack"><i style="height:32%"></i><i style="height:47%"></i><i style="height:67%"></i><i style="height:82%"></i></div>
-            <div class="macro-sub">Microsoft 94% · Google 87% · Amazon 76% · Meta 68% · Apple 62%</div>
+        '''<section class="compact-section">
+        <div class="compact-head"><div><h2>📊 거시 시그널 <span style="font-size:12px;color:#4F6FAE">Global Macro Signals</span></h2>
+        <p>핵심 지표만 빠르게 확인하세요.</p></div><span class="future-demo">DEMO DATA</span></div>
+        <div class="compact-grid-4">
+          <div class="compact-card"><b>빅테크 CapEx 집행률</b><div class="compact-kpi">78%</div><div class="compact-positive">▲ +12%p</div>
+            <div class="bar-stack" style="height:70px"><i style="height:30%"></i><i style="height:45%"></i><i style="height:65%"></i><i style="height:82%"></i></div></div>
+          <div class="compact-card"><b>섹터별 기관/외국인 자금 유입</b>
+            <div class="flow-row"><span>반도체</span><div class="flow-bar" style="width:100%"></div><b>+1.42조</b></div>
+            <div class="flow-row"><span>IT하드웨어</span><div class="flow-bar" style="width:70%"></div><b>+8,520억</b></div>
+            <div class="flow-row"><span>2차전지</span><div class="flow-bar" style="width:52%"></div><b>+6,340억</b></div></div>
+          <div class="compact-card"><b>미 연준 금리 트렌드</b><div class="compact-kpi">5.25 ~ 5.50%</div>
+            <svg viewBox="0 0 360 90" width="100%" height="82"><polyline fill="none" stroke="#2563EB" stroke-width="4" points="5,78 35,78 35,65 65,65 65,52 95,52 95,39 125,39 125,28 155,28 155,20 195,20 235,20 275,24 350,24"/></svg></div>
+          <div class="compact-card"><b>USD/KRW 환율</b><div class="compact-kpi">1,357.80원</div><div class="compact-negative">▼ -4.10 (-0.30%)</div>
+            <svg viewBox="0 0 360 85" width="100%" height="78"><polyline fill="none" stroke="#FB7185" stroke-width="4" points="0,55 25,48 50,54 75,38 100,45 125,31 150,37 175,25 200,33 225,20 250,32 280,27 310,41 355,35"/></svg></div>
+        </div></section>''', unsafe_allow_html=True)
+
+    st.markdown(
+        '''<section class="compact-section">
+        <div class="compact-head"><div><h2>🚀 5대 미래 유망 테마 <span style="font-size:12px;color:#4F6FAE">Future Investment Themes</span></h2>
+        <p>테마별 성장성과 자금 흐름을 빠르게 비교하세요.</p></div></div>
+        <div class="compact-grid-5">
+          <div class="compact-theme active"><b>AI/반도체</b><span>AI 인프라와 반도체 슈퍼사이클</span></div>
+          <div class="compact-theme"><b>로보틱스</b><span>피지컬 AI와 휴머노이드</span></div>
+          <div class="compact-theme"><b>차세대 에너지</b><span>전력 인프라와 친환경 에너지</span></div>
+          <div class="compact-theme"><b>바이오/헬스</b><span>AI 기반 신약 개발</span></div>
+          <div class="compact-theme"><b>우주/방산</b><span>민간 우주산업과 글로벌 안보</span></div>
+        </div></section>''', unsafe_allow_html=True)
+
+    st.markdown(
+        '''<section class="compact-section">
+        <div class="compact-head"><div><h2>🔎 산업 펀더멘털 핵심 지표 <span style="font-size:12px;color:#4F6FAE">Industry Fundamentals</span></h2>
+        <p>성장 가시성, 수출 모멘텀, 생산성, 재무 리스크를 4개 도메인으로 압축했습니다.</p></div><span class="future-demo">DEMO DATA</span></div>
+        <div class="compact-domain-grid">
+          <div class="domain-card"><div class="domain-title"><span class="domain-num" style="background:#F59E0B">1</span>글로벌 수요 & 수주</div>
+            <div class="domain-kpis">
+              <div class="domain-kpi"><label>전방 산업 CapEx 추이</label><strong>850조</strong><span class="compact-positive">▲ +18% YoY</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><polyline fill="none" stroke="#F59E0B" stroke-width="4" points="5,62 55,54 105,45 155,32 205,22 255,12"/></svg></div></div>
+              <div class="domain-kpi"><label>주요 기업 수주 잔고</label><strong>125.4조</strong><span class="compact-positive">NVIDIA +28%</span>
+                <div class="mini-chart"><div class="flow-row"><span>NVIDIA</span><div class="flow-bar" style="width:95%"></div><b>125</b></div><div class="flow-row"><span>TSMC</span><div class="flow-bar" style="width:70%"></div><b>89</b></div></div></div>
+              <div class="domain-kpi"><label>글로벌 MS 변화</label><strong>32%</strong><span class="compact-positive">▲ +4%p</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><polyline fill="none" stroke="#14B8A6" stroke-width="4" points="5,52 55,43 105,37 155,39 205,31 255,28"/></svg></div></div>
+            </div>
           </div>
-          <div class="macro-card"><div class="macro-title">섹터별 기관/외국인 자금 유입</div><div class="macro-sub">최근 1주 · 단위 억원</div>
-            <div class="flow-row"><span>반도체</span><div class="flow-bar" style="width:100%"></div><b>+12,840</b></div>
-            <div class="flow-row"><span>IT하드웨어</span><div class="flow-bar" style="width:72%"></div><b>+8,420</b></div>
-            <div class="flow-row"><span>2차전지</span><div class="flow-bar" style="width:58%"></div><b>+6,780</b></div>
-            <div class="flow-row"><span>바이오</span><div class="flow-bar" style="width:36%"></div><b>+3,920</b></div>
-            <div class="flow-row"><span>헬스케어</span><div class="flow-bar" style="width:22%"></div><b>+2,310</b></div>
+
+          <div class="domain-card"><div class="domain-title"><span class="domain-num" style="background:#2563EB">2</span>수출 & 무역 모멘텀</div>
+            <div class="domain-kpis">
+              <div class="domain-kpi"><label>품목별 월별 수출액</label><strong>124.2억달러</strong><span class="compact-positive">▲ +42.1% YoY / +8.3% MoM</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><polyline fill="none" stroke="#2563EB" stroke-width="4" points="5,62 45,58 85,50 125,42 165,35 205,25 255,15"/></svg></div></div>
+              <div class="domain-kpi"><label>수출 단가(ASP)</label><strong>1,420$</strong><span class="compact-positive">▲ +6.8%</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><polyline fill="none" stroke="#8B5CF6" stroke-width="4" points="5,60 45,53 85,46 125,37 165,29 205,21 255,26"/></svg></div></div>
+              <div class="domain-kpi"><label>주요 수출국 비중</label><strong>미국 28.4%</strong><span class="macro-sub">중국 18.7% · EU 14.2%</span>
+                <div class="mini-chart" style="background:conic-gradient(#6366F1 0 28%,#EF4444 28% 47%,#14B8A6 47% 61%,#F59E0B 61% 78%,#CBD5E1 78%);border-radius:999px;width:74px;margin:8px auto"></div></div>
+            </div>
           </div>
-          <div class="macro-card"><div class="macro-title">미 연준 금리 트렌드</div><div class="macro-sub">기준금리 · %</div>
-            <div class="macro-value">5.25 ~ 5.50%</div>
-            <svg viewBox="0 0 420 120" width="100%" height="120"><polyline fill="none" stroke="#2563EB" stroke-width="5" points="5,105 35,105 35,92 65,92 65,78 95,78 95,65 125,65 125,51 155,51 155,38 185,38 185,27 215,27 215,19 245,19 245,15 285,15 325,15 365,20 415,20"/></svg>
-            <div class="macro-sub">다음 FOMC · 2025.06.18</div>
+
+          <div class="domain-card"><div class="domain-title"><span class="domain-num" style="background:#22C55E">3</span>생산성 & 효율성</div>
+            <div class="domain-kpis">
+              <div class="domain-kpi"><label>평균 가동률</label><strong>82%</strong><span class="compact-positive">▲ +3%p</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><polyline fill="none" stroke="#22C55E" stroke-width="4" points="5,55 55,48 105,42 155,36 205,29 255,20"/></svg></div></div>
+              <div class="domain-kpi"><label>생산능력 증설 CapEx</label><strong>72.8조원</strong><span class="compact-positive">▲ +25%</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><rect x="20" y="45" width="35" height="24" fill="#93C5FD"/><rect x="85" y="34" width="35" height="35" fill="#60A5FA"/><rect x="150" y="22" width="35" height="47" fill="#3B82F6"/><rect x="215" y="12" width="35" height="57" fill="#2563EB"/></svg></div></div>
+              <div class="domain-kpi"><label>1인당 생산성/매출액</label><strong>12.8억원</strong><span class="compact-positive">▲ +14%</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><polyline fill="none" stroke="#06B6D4" stroke-width="4" points="5,58 55,51 105,43 155,36 205,28 255,18"/></svg></div></div>
+            </div>
           </div>
-          <div class="macro-card"><div class="macro-title">USD/KRW 환율 트렌드</div><div class="macro-value">1,357.80원</div><div style="color:#2563EB;font-size:12px">▼ -4.10 (-0.30%)</div>
-            <svg viewBox="0 0 420 110" width="100%" height="110"><polyline fill="none" stroke="#FB7185" stroke-width="4" points="0,70 30,62 60,66 90,50 120,58 150,45 180,52 210,34 240,41 270,32 300,45 330,38 360,50 420,46"/></svg>
-            <div class="macro-sub">주요 이슈 · 미국 국채금리 상승 · 달러 강세 지속 · 수출업체 환헤지 물량 증가</div>
+
+          <div class="domain-card"><div class="domain-title"><span class="domain-num" style="background:#EF4444">4</span>리스크 스크리닝 & 재무</div>
+            <div class="domain-kpis">
+              <div class="domain-kpi"><label>FCF</label><strong>41.2조원</strong><span class="compact-positive">▲ +19%</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><rect x="20" y="48" width="30" height="21" fill="#BFDBFE"/><rect x="72" y="39" width="30" height="30" fill="#93C5FD"/><rect x="124" y="30" width="30" height="39" fill="#60A5FA"/><rect x="176" y="21" width="30" height="48" fill="#3B82F6"/><rect x="228" y="12" width="30" height="57" fill="#2563EB"/></svg></div></div>
+              <div class="domain-kpi"><label>영업이익률 (OPM)</label><strong>28.4%</strong><span class="compact-positive">▲ +4.2%p</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><polyline fill="none" stroke="#2563EB" stroke-width="4" points="5,60 45,52 85,43 125,35 165,29 205,22 255,14"/></svg></div></div>
+              <div class="domain-kpi"><label>이자보상배율</label><strong>16.3배</strong><span class="compact-positive">정상 구간</span>
+                <div class="mini-chart"><svg viewBox="0 0 260 74" width="100%" height="74"><rect x="25" y="15" width="32" height="54" fill="#22C55E"/><rect x="80" y="29" width="32" height="40" fill="#84CC16"/><rect x="135" y="43" width="32" height="26" fill="#F59E0B"/><rect x="190" y="57" width="32" height="12" fill="#EF4444"/></svg></div></div>
+            </div>
           </div>
         </div></section>''', unsafe_allow_html=True)
 
     st.markdown(
-        '''<section class="future-section">
-        <div class="future-head"><div><h2>🚀 5대 미래 유망 테마 <span style="font-size:12px;color:#4F6FAE">Future Investment Themes</span></h2>
-        <p>지금 주목해야 할 핵심 테마를 확인하고, 투자 기회를 찾아보세요.</p></div><span class="future-demo">DEMO DATA</span></div>
-        <div class="theme-tabs">
-          <div class="theme-tab active">▣ AI/반도체</div><div class="theme-tab">♙ 로보틱스</div><div class="theme-tab">♻ 차세대 에너지</div><div class="theme-tab">✚ 바이오/헬스</div><div class="theme-tab">🚀 우주/방산</div>
-        </div>
-        <div class="theme-grid">
-          <div class="theme-hero"><div style="font-size:26px;font-weight:900">AI/반도체</div><div style="margin-top:9px;color:#D9E4FA">AI 인프라 확장과 반도체 수요 증가로 지속적인 성장 기대</div>
-            <div style="margin-top:16px"><span class="stockdash-dark-chip">#AI인프라</span> <span class="stockdash-dark-chip">#HBM</span> <span class="stockdash-dark-chip">#데이터센터</span> <span class="stockdash-dark-chip">#온디바이스AI</span></div>
-            <div class="stockdash-ohlc"><div><span>최근 1개월 자금 유입</span><strong>+12,840억원</strong></div><div><span>섹터 수익률</span><strong>+8.4%</strong></div><div><span>평균 PER</span><strong>24.7배</strong></div><div><span>모멘텀 점수</span><strong>87점</strong></div></div>
-          </div>
-          <div class="theme-mini"><div class="deep-title">로보틱스</div><div class="macro-sub">산업 자동화 확산과 로봇 시장 성장</div><div class="metric">자금 유입 <b>+6,230억</b></div><div class="metric">수익률 <b>+6.8%</b></div><div class="metric">모멘텀 <b>78점</b></div></div>
-          <div class="theme-mini"><div class="deep-title">차세대 에너지</div><div class="macro-sub">친환경 에너지 전환과 전기차 확산</div><div class="metric">자금 유입 <b>+4,870억</b></div><div class="metric">수익률 <b>+5.9%</b></div><div class="metric">모멘텀 <b>72점</b></div></div>
-          <div class="theme-mini"><div class="deep-title">바이오/헬스</div><div class="macro-sub">신약 개발과 바이오 기술 혁신</div><div class="metric">자금 유입 <b>+3,120억</b></div><div class="metric">수익률 <b>+4.7%</b></div><div class="metric">모멘텀 <b>68점</b></div></div>
-          <div class="theme-mini"><div class="deep-title">우주/방산</div><div class="macro-sub">우주 산업 성장과 글로벌 방산 수요 증가</div><div class="metric">자금 유입 <b>+2,860억</b></div><div class="metric">수익률 <b>+4.1%</b></div><div class="metric">모멘텀 <b>63점</b></div></div>
-        </div></section>''', unsafe_allow_html=True)
-
-    st.markdown(
-        '''<section class="future-section">
-        <div class="future-head"><div><h2>🔎 테마 내 종목 딥다이브 & 스크리너 <span style="font-size:12px;color:#4F6FAE">Stock Deep Dive & Screener</span></h2>
-        <p>관심 테마의 핵심 종목을 심층 분석하고, 나만의 스크리너로 찾아보세요.</p></div><span class="future-demo">DEMO DATA</span></div>
-        <div class="deep-grid">
+        '''<section class="compact-section">
+        <div class="compact-head"><div><h2>🔍 종목 딥다이브 & 스크리너 <span style="font-size:12px;color:#4F6FAE">Stock Deep Dive & Screener</span></h2>
+        <p>핵심 종목 비교에 필요한 지표만 남겼습니다.</p></div><span class="future-demo">DEMO DATA</span></div>
+        <div class="screener-grid">
           <div class="deep-card"><div class="deep-title">AI/반도체 테마 Top-Pick</div>
             <div class="pick-row"><b>1</b><b>NVIDIA</b><span>1,035.40</span><span>+12.8%</span></div>
-            <div class="pick-row"><b>2</b><b>삼성전자</b><span>78,600</span><span>+11.2%</span></div>
-            <div class="pick-row"><b>3</b><b>SK하이닉스</b><span>194,500</span><span>+13.5%</span></div>
+            <div class="pick-row"><b>2</b><b>삼성전자</b><span>78,600</span><span>+1.55%</span></div>
+            <div class="pick-row"><b>3</b><b>SK하이닉스</b><span>194,500</span><span>+1.30%</span></div>
             <div class="pick-row"><b>4</b><b>TSMC</b><span>862.50</span><span>+10.4%</span></div>
             <div class="pick-row"><b>5</b><b>ASML</b><span>745.20</span><span>+7.6%</span></div>
           </div>
           <div class="deep-card"><div class="deep-title">매출 성장률 vs FCF</div>
-            <svg viewBox="0 0 420 220" width="100%" height="215">
-              <line x1="35" y1="185" x2="400" y2="185" stroke="#D8E0EC"/><line x1="35" y1="20" x2="35" y2="185" stroke="#D8E0EC"/>
-              <circle cx="305" cy="52" r="13" fill="#84CC16"/><text x="322" y="57" font-size="12">NVIDIA</text>
-              <circle cx="230" cy="90" r="12" fill="#8B5CF6"/><text x="246" y="94" font-size="12">SK하이닉스</text>
-              <circle cx="330" cy="112" r="12" fill="#2563EB"/><text x="346" y="116" font-size="12">삼성전자</text>
-              <circle cx="180" cy="130" r="10" fill="#EF4444"/><text x="195" y="134" font-size="12">TSMC</text>
-              <circle cx="110" cy="145" r="10" fill="#F59E0B"/><text x="125" y="149" font-size="12">ASML</text>
-              <text x="150" y="210" font-size="11" fill="#64748B">FCF (조원)</text><text x="3" y="100" font-size="11" fill="#64748B" transform="rotate(-90 12 100)">매출 성장률 (%)</text>
-            </svg>
+            <svg viewBox="0 0 420 220" width="100%" height="215"><line x1="35" y1="185" x2="400" y2="185" stroke="#D8E0EC"/><line x1="35" y1="20" x2="35" y2="185" stroke="#D8E0EC"/>
+              <circle cx="305" cy="52" r="13" fill="#84CC16"/><text x="322" y="57" font-size="12">NVIDIA</text><circle cx="230" cy="90" r="12" fill="#8B5CF6"/><text x="246" y="94" font-size="12">SK하이닉스</text>
+              <circle cx="330" cy="112" r="12" fill="#2563EB"/><text x="346" y="116" font-size="12">삼성전자</text><circle cx="180" cy="130" r="10" fill="#EF4444"/><text x="195" y="134" font-size="12">TSMC</text></svg>
           </div>
           <div class="deep-card"><div class="deep-title">R&D 비중 (매출 대비)</div>
             <div class="rd-row"><span>NVIDIA</span><div class="rd-track"><div class="rd-fill" style="width:90%"></div></div><b>27.1%</b></div>
             <div class="rd-row"><span>AMD</span><div class="rd-track"><div class="rd-fill" style="width:86%"></div></div><b>26.4%</b></div>
             <div class="rd-row"><span>Intel</span><div class="rd-track"><div class="rd-fill" style="width:72%"></div></div><b>21.9%</b></div>
             <div class="rd-row"><span>삼성전자</span><div class="rd-track"><div class="rd-fill" style="width:39%"></div></div><b>11.8%</b></div>
-            <div class="rd-row"><span>SK하이닉스</span><div class="rd-track"><div class="rd-fill" style="width:35%"></div></div><b>10.4%</b></div>
-          </div>
-          <div class="deep-card"><div class="deep-title">주요 일정 & 모멘텀 타임라인</div>
-            <div class="timeline-row"><b>06.03</b><i class="timeline-dot"></i><span>NVIDIA 실적 발표</span></div>
-            <div class="timeline-row"><b>06.05</b><i class="timeline-dot"></i><span>SK하이닉스 HBM3E 신규 수주</span></div>
-            <div class="timeline-row"><b>06.12</b><i class="timeline-dot"></i><span>삼성전자 AI 신사업 로드맵 공개</span></div>
-            <div class="timeline-row"><b>06.18</b><i class="timeline-dot"></i><span>연준 FOMC 금리 발표</span></div>
-            <div class="timeline-row"><b>06.25</b><i class="timeline-dot"></i><span>TSMC 월간 매출 발표</span></div>
-            <div class="timeline-row"><b>07.02</b><i class="timeline-dot"></i><span>ASML 신규 장비 수주 발표</span></div>
           </div>
         </div></section>
-        <div class="stockdash-footer">※ 본 화면은 디자인 확인용 샘플 데이터입니다. 실제 투자 판단 자료가 아닙니다.</div>''', unsafe_allow_html=True)
+        <div class="stockdash-footer">※ 본 화면의 수치와 기업 비교는 디자인 확인용 샘플 데이터입니다. 실제 투자 판단 자료가 아닙니다.</div>''', unsafe_allow_html=True)
 
 def render_market():
     hero("시장 현황", "지수·거래대금·시장 폭·투자자 수급을 한 화면으로 연결하는 영역입니다.", "MARKET")
