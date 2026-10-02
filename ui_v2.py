@@ -187,6 +187,28 @@ linear-gradient(135deg,#0A1634 0%,#10295A 65%,#163A7D 100%);border-radius:18px;p
 @media(max-width:1100px){.macro-grid{grid-template-columns:repeat(2,1fr)}.theme-grid{grid-template-columns:1fr 1fr}.deep-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.macro-grid,.theme-tabs,.theme-grid,.deep-grid{grid-template-columns:1fr}.future-head{align-items:flex-start;flex-direction:column}}
 
+
+/* Compact industry-fundamentals dashboard — final selected mockup */
+.compact-section{background:#fff;border:1px solid #E7ECF3;border-radius:16px;padding:16px 18px;margin:12px 0;box-shadow:0 8px 22px rgba(15,23,42,.035)}
+.compact-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.compact-head h2{font-size:20px;margin:0}.compact-head p{font-size:11px;color:#73809A;margin:3px 0 0}
+.compact-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.compact-grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.compact-domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.compact-card{background:#fff;border:1px solid #E7ECF3;border-radius:13px;padding:13px;min-height:155px}
+.compact-kpi{font-size:26px;font-weight:900;letter-spacing:-.04em;margin:10px 0 4px}
+.compact-positive{color:#16A34A;font-weight:800;font-size:11px}.compact-negative{color:#DC2626;font-weight:800;font-size:11px}
+.compact-theme{border-radius:14px;padding:16px;min-height:108px;border:1px solid #E5EAF1;background:linear-gradient(180deg,#fff,#FAFCFF)}
+.compact-theme.active{background:linear-gradient(135deg,#0E5CF5,#3046D3);color:#fff;border-color:transparent}
+.compact-theme b{display:block;font-size:14px}.compact-theme span{display:block;font-size:10px;margin-top:5px;opacity:.75}
+.domain-card{border:1px solid #E6EBF3;border-radius:15px;padding:14px;background:linear-gradient(180deg,#fff,#FBFDFF)}
+.domain-title{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:850;margin-bottom:11px}.domain-num{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
+.domain-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.domain-kpi{border:1px solid #EDF1F6;border-radius:11px;padding:10px;background:#fff}.domain-kpi label{display:block;font-size:10px;color:#6B7280}.domain-kpi strong{display:block;font-size:18px;margin-top:5px}
+.mini-chart{height:74px;margin-top:8px;border-radius:8px;background:linear-gradient(180deg,#F8FBFF,#fff);position:relative;overflow:hidden}
+.screener-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px}
+@media(max-width:1100px){.compact-grid-4,.compact-grid-5{grid-template-columns:repeat(2,1fr)}.compact-domain-grid,.screener-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.compact-grid-4,.compact-grid-5,.domain-kpis{grid-template-columns:1fr}}
+
 </style>
 """,
         unsafe_allow_html=True,
