@@ -359,199 +359,102 @@ def global_search():
 
 
 def render_home():
-    """Image-inspired investment dashboard home."""
+    """Visual preview dashboard. Sample figures are intentionally used for design preview."""
     st.markdown(
         '''<div class="stockdash-topbar">
-          <div class="stockdash-greeting">
-            <h1>안녕하세요, 투자자님! 👋</h1>
-            <p>오늘의 시장 흐름과 내 종목을 한 화면에서 확인하세요.</p>
-          </div>
-          <div class="stockdash-search">⌕  종목명 또는 코드 검색</div>
-        </div>''',
-        unsafe_allow_html=True,
-    )
+          <div class="stockdash-greeting"><h1>안녕하세요, 투자자님! 👋</h1>
+          <p>오늘도 성공적인 투자를 응원합니다. <span class="stockdash-chip">DESIGN PREVIEW · 샘플 데이터</span></p></div>
+          <div class="stockdash-search">⌕  종목명 또는 코드 검색 (예: 삼성전자, 005930)</div>
+        </div>''', unsafe_allow_html=True)
 
-    global_search()
-
-    caps = active_capabilities()
-    market_items = [
-        ("KOSPI", "market.index"),
-        ("KOSDAQ", "market.index"),
-        ("NASDAQ", "market.index"),
-        ("S&P 500", "market.index"),
-        ("USD/KRW", "macro.fx"),
+    market = [
+        ("코스피","2,726.45","▲ 18.63 (+0.69%)","12.5조원"),
+        ("코스닥","855.12","▲ 7.21 (+0.85%)","8.2조원"),
+        ("나스닥","17,133.13","▼ 123.45 (-0.72%)","5,482억달러"),
+        ("S&P 500","5,307.01","▼ 19.25 (-0.36%)","3,981억달러"),
+        ("원/달러 (USD/KRW)","1,357.80","▼ 4.10 (-0.30%)","전일대비 -4.10"),
     ]
-    cards = []
-    for label, cap in market_items:
-        connected = cap in caps
-        cards.append(
-            f'''<div class="stockdash-kpi">
-              <div class="stockdash-kpi-label">{html.escape(label)}</div>
-              <div class="stockdash-kpi-value">{'연결됨' if connected else '연결 대기'}</div>
-              <div class="stockdash-kpi-note">{html.escape(cap)}</div>
-            </div>'''
-        )
-    st.markdown('<div class="stockdash-kpi-grid">' + "".join(cards) + '</div>', unsafe_allow_html=True)
+    cards = "".join(
+        f'''<div class="stockdash-kpi"><div class="stockdash-kpi-label">{a}</div>
+        <div class="stockdash-kpi-value">{b}</div>
+        <div class="stockdash-kpi-note">{c}<br>{d}</div></div>''' for a,b,c,d in market)
+    st.markdown('<div class="stockdash-kpi-grid">'+cards+'</div>', unsafe_allow_html=True)
 
-    saved = [
-        s for s in state.get("stocks", [])
-        if s.get("name", "").strip().casefold() not in REMOVE_FROM_MY_STOCKS
+    watch = [
+        ("삼성전자","005930","78,600원","+1.55%"),
+        ("SK하이닉스","000660","194,500원","+1.30%"),
+        ("LG에너지솔루션","373220","362,000원","+1.26%"),
+        ("NAVER","035420","203,500원","+0.74%"),
+        ("카카오","035720","49,850원","-4.41%"),
     ]
-    focus = stock if stock.get("code") != "SAMPLE" else (saved[0] if saved else stock)
-    focus_report = focus.get("report") or {}
-    focus_price = focus_report.get("price")
-    focus_price_text = f"{focus_price:,.0f}원" if isinstance(focus_price, (int, float)) else "분석 데이터 대기"
-    focus_name = html.escape(focus.get("name", "삼성전자"))
-    focus_code = html.escape(focus.get("code", ""))
-
-    if focus_report:
-        result = brief(focus_report)
-        fair = result.get("fair")
-        growth_text = result.get("growth", "자료 부족")
-        value_text = result.get("value", "자료 부족")
-        fair_text = f"{fair['base']:,.0f}원" if fair else "자료 부족"
-        price_date = focus_report.get("price_date", "")
-        close_text = f"{focus_report.get('price', 0):,.0f}원" if isinstance(focus_report.get("price"), (int,float)) else "—"
-        ohlc = [
-            ("기준 종가", close_text),
-            ("성장", str(growth_text)),
-            ("가치", str(value_text)),
-            ("참고가", fair_text),
-            ("기준일", str(price_date or "—")),
-        ]
-    else:
-        ohlc = [
-            ("기준 종가", "—"), ("성장", "—"), ("가치", "—"), ("참고가", "—"), ("기준일", "—")
-        ]
-
-    hero_stats = "".join(
-        f'<div><span>{html.escape(k)}</span><strong>{html.escape(v)}</strong></div>' for k, v in ohlc
-    )
-
-    watch_rows = []
-    for item in saved[:5]:
-        rep = item.get("report") or {}
-        p = rep.get("price")
-        ptxt = f"{p:,.0f}원" if isinstance(p, (int,float)) else "—"
-        status = "분석 완료" if rep else "분석 필요"
-        watch_rows.append(
-            f'''<div class="stockdash-watch-row">
-              <div><span class="stockdash-stock-name">{html.escape(item.get("name","종목"))}</span>
-              <span class="stockdash-stock-code">{html.escape(item.get("code",""))}</span></div>
-              <div class="stockdash-stock-price">{html.escape(ptxt)}</div>
-              <div class="stockdash-stock-change">{html.escape(status)}</div>
-              <div><span class="stockdash-chip">{html.escape(item.get("kind","관심"))}</span></div>
-            </div>'''
-        )
+    rows = "".join(
+        f'''<div class="stockdash-watch-row"><div><span class="stockdash-stock-name">{n}</span>
+        <span class="stockdash-stock-code">{code}</span></div><div class="stockdash-stock-price">{p}</div>
+        <div class="stockdash-stock-change">{ch}</div><div><span class="stockdash-chip">관심</span></div></div>'''
+        for n,code,p,ch in watch)
 
     st.markdown(
         f'''<div class="stockdash-grid-3">
           <div class="stockdash-hero-card">
-            <div><span class="stockdash-hero-name">{focus_name}</span><span class="stockdash-hero-code">{focus_code}</span></div>
-            <div class="stockdash-hero-price">{html.escape(focus_price_text)}</div>
-            <div class="stockdash-hero-change">공식 데이터 기준</div>
-            <div class="stockdash-hero-meta">
-              <span class="stockdash-dark-chip">코스피</span>
-              <span class="stockdash-dark-chip">내 종목</span>
-              <span class="stockdash-dark-chip">분석 포커스</span>
-            </div>
-            <div class="stockdash-ohlc">{hero_stats}</div>
-          </div>
-
-          <div class="stockdash-small-card">
-            <div class="stockdash-title-row"><strong>{focus_name} 주가 차트</strong><span>공식 데이터 기반</span></div>
-            <div style="height:220px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:linear-gradient(180deg,#F8FAFF,#FFFFFF);color:#94A3B8;font-size:12px;text-align:center;padding:20px">
-              분석 데이터가 연결되면<br>가격 추이 차트가 이 영역에 표시됩니다.
+            <div><span class="stockdash-hero-name">삼성전자</span><span class="stockdash-hero-code">005930 ★</span></div>
+            <div class="stockdash-hero-meta"><span class="stockdash-dark-chip">코스피</span><span class="stockdash-dark-chip">전기전자</span><span class="stockdash-dark-chip">시가총액 469조원</span></div>
+            <div class="stockdash-hero-price">78,600원</div><div class="stockdash-hero-change">▲ 1,200 (+1.55%)</div>
+            <div class="stockdash-ohlc">
+              <div><span>전일 종가</span><strong>77,400</strong></div><div><span>시가</span><strong>77,800</strong></div>
+              <div><span>고가</span><strong>78,900</strong></div><div><span>저가</span><strong>77,300</strong></div>
+              <div><span>거래량</span><strong>12,534,281</strong></div>
             </div>
           </div>
-
           <div class="stockdash-small-card">
-            <div class="stockdash-title-row"><strong>내 종목</strong><span>전체보기</span></div>
-            {''.join(watch_rows) if watch_rows else '<div class="stockdash-ai-text">아직 저장된 종목이 없습니다.<br>삼성전자부터 추가해보세요.</div>'}
+            <div class="stockdash-title-row"><strong>삼성전자 주가 차트</strong><span>일 · 주 · 월 · 3개월 · 1년</span></div>
+            <div style="height:235px;position:relative;background:linear-gradient(180deg,#F8FAFF,#fff);border-radius:12px;overflow:hidden">
+              <svg viewBox="0 0 520 235" width="100%" height="100%" preserveAspectRatio="none">
+                <g stroke="#E8EEF7" stroke-width="1"><line x1="0" y1="45" x2="520" y2="45"/><line x1="0" y1="95" x2="520" y2="95"/><line x1="0" y1="145" x2="520" y2="145"/><line x1="0" y1="195" x2="520" y2="195"/></g>
+                <polyline fill="none" stroke="#2563EB" stroke-width="4" points="8,150 35,168 62,130 90,182 118,155 145,112 172,126 200,92 228,104 255,78 282,91 310,67 338,99 365,82 392,58 420,75 448,42 476,54 510,24"/>
+              </svg>
+              <div style="position:absolute;left:14px;bottom:12px;color:#94A3B8;font-size:10px">05/01　05/08　05/15　05/22　05/29　06/01</div>
+            </div>
           </div>
-        </div>''',
-        unsafe_allow_html=True,
-    )
+          <div class="stockdash-small-card"><div class="stockdash-title-row"><strong>내 종목</strong><span>전체보기 ›</span></div>{rows}</div>
+        </div>''', unsafe_allow_html=True)
 
-    st.markdown('<div class="stockdash-section"><h3>포트폴리오 & 인사이트</h3><span>내 데이터 기준</span></div>', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1.25, 1, 1], gap="large")
+    st.markdown('<div class="stockdash-section"><h3>포트폴리오 현황</h3><span>샘플 데이터로 디자인 확인</span></div>', unsafe_allow_html=True)
+    c1,c2,c3 = st.columns([1,1.25,1], gap="large")
+    with c1:
+        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>내 포트폴리오 현황</strong><span>총 자산</span></div>
+        <div style="font-size:26px;font-weight:900">125,980,000원</div><div style="margin:7px 0 18px;color:#EF4444;font-weight:800">+8,750,000원 (+7.46%)</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span>삼성전자 45.2%</span><b>SK하이닉스 18.6%</b></div>
+        <div style="height:10px;background:linear-gradient(90deg,#2563EB 0 45%,#60A5FA 45% 64%,#22C55E 64% 78%,#F59E0B 78% 89%,#CBD5E1 89%);border-radius:999px;margin-top:12px"></div></div>''', unsafe_allow_html=True)
+    with c2:
+        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>수익률 추이</strong><span>3개월</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px"><div class="stockdash-kpi"><div class="stockdash-kpi-label">총 자산</div><b>125,980,000원</b></div><div class="stockdash-kpi"><div class="stockdash-kpi-label">평가 손익</div><b>+8,750,000원</b></div><div class="stockdash-kpi"><div class="stockdash-kpi-label">수익률</div><b>+7.46%</b></div></div>
+        <svg viewBox="0 0 520 125" width="100%" height="125"><polyline fill="none" stroke="#2563EB" stroke-width="4" points="0,105 35,95 70,101 105,76 140,82 175,57 210,66 245,42 280,54 315,35 350,45 385,24 420,31 455,18 520,25"/></svg></div>''', unsafe_allow_html=True)
+    with c3:
+        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>AI 인사이트 요약</strong><span>더보기 ›</span></div>
+        <div class="stockdash-ai"><div class="stockdash-ai-title">🤖 AI SUMMARY</div><div class="stockdash-ai-text">삼성전자는 메모리 반도체 업황 개선과 AI 수요 증가로 실적 개선이 기대됩니다.<br><br>목표가 상향 리포트가 증가하고 있으며 기관 매수세가 이어지는 흐름입니다.</div>
+        <div style="margin-top:12px"><span class="stockdash-chip">긍정</span> <span class="stockdash-chip">목표가 상향</span> <span class="stockdash-chip">실적 개선</span></div></div></div>''', unsafe_allow_html=True)
 
-    with col1:
-        with st.container(border=True):
-            st.subheader("내 포트폴리오 현황")
-            snapshot = st.session_state.get("account_snapshot") or {}
-            positions = snapshot.get("positions", [])
-            total_value = snapshot.get("total_value")
-            if isinstance(total_value, (int, float)):
-                st.metric("총 자산", f"{total_value:,.0f}원")
-            else:
-                st.metric("총 자산", "계좌 연결 필요")
-            st.caption(f"보유 종목 {len(positions)}개" if positions else "계좌를 연결하면 보유 종목이 표시됩니다.")
+    st.markdown('<div class="stockdash-section"><h3>오늘의 주요 정보</h3><span>샘플 프리뷰</span></div>', unsafe_allow_html=True)
+    b1,b2,b3 = st.columns([1,1.25,1], gap="large")
+    with b1:
+        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>오늘의 주요 종목 상승률 TOP 5</strong><span>더보기 ›</span></div>
+        <div class="stockdash-watch-row"><b>1　두산에너빌리티</b><span>35,400원</span><span>+8.24%</span><span>━━</span></div>
+        <div class="stockdash-watch-row"><b>2　한화솔루션</b><span>28,200원</span><span>+6.35%</span><span>━━</span></div>
+        <div class="stockdash-watch-row"><b>3　POSCO홀딩스</b><span>412,000원</span><span>+4.87%</span><span>━━</span></div>
+        <div class="stockdash-watch-row"><b>4　삼성SDI</b><span>385,000원</span><span>+4.23%</span><span>━━</span></div>
+        <div class="stockdash-watch-row"><b>5　한국전력</b><span>23,250원</span><span>+3.91%</span><span>━━</span></div></div>''', unsafe_allow_html=True)
+    with b2:
+        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>주요 뉴스 & 공시</strong><span>더보기 ›</span></div>
+        <div class="stockdash-watch-row"><span class="stockdash-chip">공시</span><b>삼성전자 연결재무제표 기준 영업실적</b><span>08:30</span><span>›</span></div>
+        <div class="stockdash-watch-row"><span class="stockdash-chip">뉴스</span><b>삼성전자, AI 반도체 HBM 본격 양산</b><span>07:45</span><span>›</span></div>
+        <div class="stockdash-watch-row"><span class="stockdash-chip">리포트</span><b>삼성전자 목표가 상향 리포트 증가</b><span>07:20</span><span>›</span></div>
+        <div class="stockdash-watch-row"><span class="stockdash-chip">뉴스</span><b>SK하이닉스, HBM 수요 확대 전망</b><span>06:55</span><span>›</span></div></div>''', unsafe_allow_html=True)
+    with b3:
+        st.markdown('''<div class="stockdash-small-card"><div class="stockdash-title-row"><strong>빠른 메뉴</strong><span>바로가기</span></div><div class="stockdash-quick-grid">
+        <div class="stockdash-quick">🔎<b>종목 검색</b></div><div class="stockdash-quick">⭐<b>관심 종목</b></div><div class="stockdash-quick">📊<b>시장 현황</b></div>
+        <div class="stockdash-quick">📄<b>종목 분석</b></div><div class="stockdash-quick">💼<b>재무 분석</b></div><div class="stockdash-quick">💡<b>AI 인사이트</b></div></div></div>''', unsafe_allow_html=True)
 
-    with col2:
-        with st.container(border=True):
-            st.subheader("자산 비중")
-            st.markdown(
-                '''<div style="height:180px;display:flex;align-items:center;justify-content:center;border-radius:999px;
-                background:conic-gradient(#2563EB 0 62%,#93C5FD 62% 78%,#E5E7EB 78% 100%);max-width:180px;margin:0 auto">
-                  <div style="width:110px;height:110px;border-radius:999px;background:white;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;color:#111827">
-                    Asset<br>Mix
-                  </div>
-                </div>''',
-                unsafe_allow_html=True,
-            )
-
-    with col3:
-        with st.container(border=True):
-            st.subheader("AI 인사이트 요약")
-            ai = focus.get("ai_brief") or {}
-            if ai.get("status") == "ok" and ai.get("text"):
-                st.write(ai["text"])
-            else:
-                st.markdown(
-                    '<div class="stockdash-ai"><div class="stockdash-ai-title">AI SUMMARY</div>'
-                    '<div class="stockdash-ai-text">공식 데이터와 공시 기반 분석 결과가 준비되면 핵심 변화와 확인 포인트를 이 영역에 요약합니다.</div></div>',
-                    unsafe_allow_html=True,
-                )
-
-    st.markdown('<div class="stockdash-section"><h3>오늘의 정보</h3><span>공시 · 빠른 메뉴</span></div>', unsafe_allow_html=True)
-    left, right = st.columns([1.4, 1], gap="large")
-    with left:
-        with st.container(border=True):
-            st.subheader("주요 뉴스 & 공시")
-            notices = []
-            if focus_report:
-                notices = sorted(focus_report.get("disclosures", []), key=lambda x: x.get("date", ""), reverse=True)
-            if notices:
-                for item in notices[:5]:
-                    st.link_button(
-                        f"{item.get('date','')} · {item.get('title','')}",
-                        item.get("url", "#"),
-                        use_container_width=True,
-                    )
-            else:
-                st.caption("분석된 종목의 최근 공시가 이곳에 표시됩니다.")
-
-    with right:
-        st.markdown(
-            '''<div class="stockdash-small-card">
-              <div class="stockdash-title-row"><strong>빠른 메뉴</strong><span>바로가기</span></div>
-              <div class="stockdash-quick-grid">
-                <div class="stockdash-quick">🔎<b>종목 검색</b></div>
-                <div class="stockdash-quick">⭐<b>관심 종목</b></div>
-                <div class="stockdash-quick">📊<b>시장 현황</b></div>
-                <div class="stockdash-quick">📄<b>종목 분석</b></div>
-                <div class="stockdash-quick">💼<b>계좌 연결</b></div>
-                <div class="stockdash-quick">💡<b>AI 인사이트</b></div>
-              </div>
-            </div>''',
-            unsafe_allow_html=True,
-        )
-
-    st.markdown(
-        '<div class="stockdash-footer">StockDash · 공식 데이터와 공시를 기반으로 구성한 개인 투자 대시보드</div>',
-        unsafe_allow_html=True,
-    )
+    st.caption("※ 현재 홈 화면의 지수·가격·수익률·뉴스 문구는 디자인 확인을 위한 샘플 값입니다. 실제 투자 데이터가 아닙니다.")
 
 def render_market():
     hero("시장 현황", "지수·거래대금·시장 폭·투자자 수급을 한 화면으로 연결하는 영역입니다.", "MARKET")
